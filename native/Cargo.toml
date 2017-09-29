@@ -1,0 +1,11 @@
+[package]
+name = "mison-avx"
+version = "0.1.0"
+authors = ["Guillaume Bort <g.bort@criteo.com>"]
+
+[lib]
+crate_type = ["dylib"]
+
+[dependencies]
+jni = "0.6.0"
+x86intrin = "0.4.3"
