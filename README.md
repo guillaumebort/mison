@@ -4,7 +4,7 @@ See Mison paper at: https://www.microsoft.com/en-us/research/wp-content/uploads/
 
 ## Implementation detail
 
-It follows exactly the design described in the Mison paper. Because there is no way to avx2 extensions from the JVM this part is written in rust and wrapped in a native call.
+It follows exactly the design described in the Mison paper. Because there is no way to avx2 extensions from the JVM this part is written in rust and wrapped in a native call. Also the predictive parsing part is not implemented, but because of the cost ob building the Mison indexes I don't think it will change anything to the benchmarck for small Json documents.
 
 ## Benchmarks
 
@@ -35,4 +35,6 @@ Benchmarks.mison       giant  avgt  200  137388.974 ±  13729.804  ns/op
 
 ## Conclusion
 
-__fastJson__ is super fast :) This mison implementation starts being more performant at the `long` test case (around 1kb). The overhead of the native call makes it less interesting for small json.
+This mison implementation starts being more performant at the `long` test case (around 1kb). The overhead of the native call makes it less interesting for small json.
+
+Perhaps it is possible to reduce this overhead (for example by using offheap memory directly from JVM code, and then just sharing a raw pointer with the native code). But for now I'm not convinced that for the common use case it will be possible to do something better as something like FastJson on the JVM.
