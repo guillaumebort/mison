@@ -2,6 +2,8 @@ package mison
 
 import java.util.concurrent._
 
+import com.alibaba.fastjson.JSON
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.github.plokhotnyuk.jsoniter_scala.core._
 import com.github.plokhotnyuk.jsoniter_scala.macros.CodecMakerConfig
 import com.github.plokhotnyuk.jsoniter_scala.macros.JsonCodecMaker._
@@ -34,6 +36,7 @@ object UrlCreated {
   "-XX:+AlwaysPreTouch"
 ))
 class Benchmarks {
+  private[this] val jacksonMapper: ObjectMapper = new ObjectMapper
 
   @Param(Array("empty", "short", "medium", "long", "huge", "giant"))
   var entry: String = _
@@ -49,30 +52,29 @@ class Benchmarks {
 
   @Benchmark
   def mison(bh: Blackhole): Unit = {
-    val values = Parser.parse(json, UrlCreated.fieldNames)
-    bh.consume(values.get("html_url"))
-    bh.consume(values.get("created_at"))
+    val value = Parser.parse(json, UrlCreated.fieldNames)
+    bh.consume(value.get("html_url"))
+    bh.consume(value.get("created_at"))
   }
 
   @Benchmark
   def fastJson(bh: Blackhole): Unit = {
-    val values = com.alibaba.fastjson.JSON.parseObject(json)
-    bh.consume(values.get("html_url"))
-    bh.consume(values.get("created_at"))
+    val value = JSON.parseObject(json)
+    bh.consume(value.get("html_url"))
+    bh.consume(value.get("created_at"))
   }
 
   @Benchmark
   def jackson(bh: Blackhole): Unit = {
-    val mapper = new com.fasterxml.jackson.databind.ObjectMapper()
-    val root = mapper.readTree(json)
-    bh.consume(root.path("html_url").asText)
-    bh.consume(root.path("created_at").asText)
+    val value = jacksonMapper.readTree(json)
+    bh.consume(value.path("html_url").asText)
+    bh.consume(value.path("created_at").asText)
   }
 
   @Benchmark
   def jsoniterScala(bh: Blackhole): Unit = {
-    val root = readFromArray[UrlCreated](jsonBytes)
-    bh.consume(root.html_url)
-    bh.consume(root.created_at)
+    val value = readFromArray[UrlCreated](jsonBytes)
+    bh.consume(value.html_url)
+    bh.consume(value.created_at)
   }
 }
