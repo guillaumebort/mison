@@ -4,7 +4,7 @@ See Mison paper at: https://www.microsoft.com/en-us/research/wp-content/uploads/
 
 ## Implementation detail
 
-It follows exactly the design described in the Mison paper. Because there is no way to avx2 extensions from the JVM this part is written in rust and wrapped in a native call. Also the predictive parsing part is not implemented, but because of the cost ob building the Mison indexes I don't think it will change anything to the benchmarck for small Json documents.
+It follows exactly the design described in the Mison paper. Because there is no way to use `avx2` extensions from the JVM this part is written in rust and wrapped in a native call. Also the predictive parsing part is not implemented, but because of the cost of building the Mison indexes I don't think it will change anything to the benchmark for small Json documents.
 
 ## Benchmarks
 
