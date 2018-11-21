@@ -32,9 +32,8 @@ object Main {
     new StringBuffer(str).reverse.toString
   }
 
-  def getJson(w: String) = {
-    val testJsons = new java.io.File(new java.io.File(System.getProperty("user.dir")), "mison/src/main/resources/test.json")
-    io.Source.fromFile(testJsons).getLines.collect {
+  def getJson(w: String): String = {
+    io.Source.fromInputStream(getClass.getResourceAsStream("test.json")).getLines.collect {
       case line if line.startsWith(s"$w:") =>
         line.drop(w.size + 1)
     }.toList.head

@@ -1,5 +1,5 @@
 lazy val commonSettings = Seq(
-  scalaVersion := "2.12.3"
+  scalaVersion := "2.12.6"
 )
 
 lazy val native =
@@ -33,8 +33,10 @@ lazy val benchmarks =
   settings(
     commonSettings,
     javaOptions in Jmh := Seq("-Xcomp", s"-Duser.dir=${file(".").getAbsolutePath}"),
-    libraryDependencies += "com.alibaba" % "fastjson" % "1.2.38",
-    libraryDependencies += "com.fasterxml.jackson.core" % "jackson-databind" % "2.9.1"
+    libraryDependencies += "com.github.plokhotnyuk.jsoniter-scala" %% "jsoniter-scala-core" % "0.29.10" % Compile,
+    libraryDependencies += "com.github.plokhotnyuk.jsoniter-scala" %% "jsoniter-scala-macros" % "0.29.10" % Provided,
+    libraryDependencies += "com.alibaba" % "fastjson" % "1.2.49",
+    libraryDependencies += "com.fasterxml.jackson.core" % "jackson-databind" % "2.9.5"
   ).
   enablePlugins(JmhPlugin).
   dependsOn(mison)
